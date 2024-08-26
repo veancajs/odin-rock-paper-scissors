@@ -30,7 +30,7 @@ function playGame() {
         if ((humanChoice === "rock" && computerChoice === "rock") ||
             (humanChoice === "scissors" && computerChoice === "scissors") ||
             (humanChoice === "paper" && computerChoice === "paper")) {
-            let tieResult = "Oops. No score added this time.\n[" + humanChoice + " vs. " + computerChoice + " results in a tie] \nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
+            let tieResult = "Oops. No score added this time.\n[" + humanChoice + " vs. " + computerChoice + " results in a tie]\nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
             alert(tieResult);
             console.log(tieResult);
         } else if ((humanChoice === "rock" && computerChoice === "scissors") ||
@@ -44,7 +44,7 @@ function playGame() {
             (humanChoice === "scissors" && computerChoice === "rock") ||
             (humanChoice === "paper" && computerChoice === "scissors")) {
             computerScore++;
-            let loseResult = "You lose.\n[" + humanChoice + " loses to " + computerChoice + "]\nCurrent Scores: Computer wins! Your Score: " + humanScore + " | Computer Score: " + computerScore;
+            let loseResult = "You lose.\n[" + humanChoice + " loses to " + computerChoice + "]\nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
             alert(loseResult);
             console.log(loseResult);
         } else {
