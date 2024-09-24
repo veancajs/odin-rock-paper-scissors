@@ -1,120 +1,96 @@
-// Function to get the computer's choice randomly
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+const results = document.querySelector("#results");
+
+results.textContent = "There are only 5 rounds in this game. Good luck!";
+
 function getComputerChoice() {
-    let choice = Math.floor(Math.random() * 3) + 1;
-    if (choice === 1) {
-        return "rock";
-    } else if (choice === 2) {
-        return "paper";
-    } else {
-        return "scissors";
-    }
+    let choice = ["rock", "paper", "scissors"]
+    return choice[Math.floor(Math.random() * choice.length)];
 }
 
-// Function to get the human player's choice
 function getHumanChoice() {
-    return prompt('What\'s your choice?', '').toLowerCase();
+    rock.addEventListener("click", function () {
+        playGame("rock");
+    })
+
+    paper.addEventListener("click", function () {
+        playGame("paper");
+    })
+
+    scissors.addEventListener("click", function () {
+        playGame("scissors");
+    })
 }
 
-// Initialize scores
+getHumanChoice();
+
 let humanScore = 0;
 let computerScore = 0;
+let round = 0;
 
-// Function to play a single round of the game
-function playGame() {
+function playGame(humanSelection) {
 
-    const humanSelection = getHumanChoice();
     const computerSelection = getComputerChoice();
 
-    // Function to handle the result of a round
+    round++;
+
     function playRound(humanChoice, computerChoice) {
         if ((humanChoice === "rock" && computerChoice === "rock") ||
             (humanChoice === "scissors" && computerChoice === "scissors") ||
             (humanChoice === "paper" && computerChoice === "paper")) {
-            let tieResult = "Oops. No score added this time.\n[" + humanChoice + " vs. " + computerChoice + " results in a tie]\nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
-            alert(tieResult);
-            console.log(tieResult);
+            results.textContent = "Round " + round + ": Oops. No score added this time. [" + humanChoice + " vs. " + computerChoice + " results in a tie] Current Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
         } else if ((humanChoice === "rock" && computerChoice === "scissors") ||
             (humanChoice === "scissors" && computerChoice === "paper") ||
             (humanChoice === "paper" && computerChoice === "rock")) {
             humanScore++;
-            let winResult = "You win!\n[" + humanChoice + " beats " + computerChoice + "]\nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
-            alert(winResult);
-            console.log(winResult);
+            results.textContent = "Round " + round + ": You win! [" + humanChoice + " beats " + computerChoice + "] Current Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
         } else if ((humanChoice === "rock" && computerChoice === "paper") ||
             (humanChoice === "scissors" && computerChoice === "rock") ||
             (humanChoice === "paper" && computerChoice === "scissors")) {
             computerScore++;
-            let loseResult = "You lose.\n[" + humanChoice + " loses to " + computerChoice + "]\nCurrent Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
-            alert(loseResult);
-            console.log(loseResult);
+            results.textContent = "Round " + round + ": You lose. [" + humanChoice + " loses to " + computerChoice + "] Current Scores: Your Score: " + humanScore + " | Computer Score: " + computerScore;
         } else {
-            console.log("Invalid input.");
+            results.textContent = "Invalid input.";
         }
     }
 
     playRound(humanSelection, computerSelection);
+
+    startGame();
 }
 
-// Function to start and manage the game flow
+function hideDisplay(param) {
+    param.style.display = "none";
+}
+
+function hideButtons() {
+    hideDisplay(rock);
+    hideDisplay(paper);
+    hideDisplay(scissors);
+}
+
 function startGame() {
-    console.log("Info: There are only 5 rounds in this game. Good luck!");
+    if (computerScore >= 3 || humanScore >= 3) {
+        hideButtons();
+        checkEarlyWinner();
+    }
 
-    for (let i = 1; i <= 5; i++) {
-
-        console.log(i + getOrdinalSuffix(i) + " Round");
-        playGame();
-
-        if (computerScore >= 3 || humanScore >= 3) {
-            checkEarlyWinner();
-            break;
-        }
-
-        if (i === 5) {
-            console.log("Final Results:\nComputer Score: " + computerScore + ", Your Score: " + humanScore);
-            resetGame();
+    if (round === 5) {
+        hideButtons();
+        if (humanScore > computerScore) {
+            results.textContent = "Round " + round + ": You win! Computer Score: " + computerScore + " | Your Score: " + humanScore + ". Refresh the browser to play again.";
+        } else {
+            results.textContent = "Round " + round + ": You lose. Computer Score: " + computerScore + " | Your Score: " + humanScore + ". Refresh the browser to play again.";
         }
     }
 }
 
-startGame();
-
-// Function to get the correct ordinal suffix for round numbers
-function getOrdinalSuffix(num) {
-    switch (num) {
-        case 1:
-            return "st";
-        case 2:
-            return "nd";
-        case 3:
-            return "rd";
-        case 4:
-        case 5:
-            return "th";
-    }
-}
-
-// Function to check for an early winner
 function checkEarlyWinner() {
-    if (computerScore === 3) {
-        console.log("The computer is the first to reach 3 points. The computer wins.\nScores: Computer Score: " + computerScore + " | Your Score: " + humanScore);
-        resetGame();
-    } else if (humanScore === 3) {
-        console.log("Congrats! You're the first to reach 3 points. You win.\nScores: Computer Score: " + computerScore + " | Your Score: " + humanScore);
-        resetGame();
-    }
-}
-
-// Function to reset the game
-function resetGame() {
-    let user = prompt("Do you want to play again? Type 'Start' to begin again or 'Exit' to leave the game.", '').toLowerCase();
-    if (user === "start") {
-        humanScore = 0;
-        computerScore = 0;
-        startGame();
-    } else if (user === "exit" || user === null || user === "") {
-        alert("Goodbye.");
-    } else {
-        console.log("Invalid input. Please type 'Start' or 'Exit'.");
-        resetGame();
+    if (computerScore === 3 && round < 5) {
+        results.textContent = "Round " + round + ": The computer is the first to reach 3 points. The computer wins. Scores: Computer Score: " + computerScore + " | Your Score: " + humanScore + ". Refresh the browser to play again.";
+    } else if (humanScore === 3 && round < 5) {
+        results.textContent = "Round " + round + ": Congrats! You're the first to reach 3 points. You win. Scores: Computer Score: " + computerScore + " | Your Score: " + humanScore + ". Refresh the browser to play again.";
     }
 }
